@@ -149,11 +149,12 @@ export async function GET() {
       console.error('Error stack:', error.stack);
       
       // Additional error details for Google API errors
-      if ('code' in error) {
-        console.error('Error code:', (error as any).code);
+      const googleError = error as { code?: number; response?: { data?: unknown } };
+      if ('code' in googleError) {
+        console.error('Error code:', googleError.code);
       }
-      if ('response' in error) {
-        console.error('Error response:', (error as any).response?.data);
+      if ('response' in googleError) {
+        console.error('Error response:', googleError.response?.data);
       }
     }
 
