@@ -8,6 +8,7 @@ interface DashboardContextType {
   updateMetric: (metricKey: MetricKey, field: 'current' | 'target', value: number) => void;
   updateChannelMetric: (parentKey: MetricKey, channelKey: ChannelMetricKey, field: 'current' | 'target', value: number) => void;
   resetMetrics: () => void;
+  error: string | null;
 }
 
 const defaultMetric: Metric = {
@@ -71,11 +72,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     }
     return initialDashboardData;
   });
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch data from Google Sheets periodically
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setError(null);
         const response = await fetch('/api/sheets');
         if (!response.ok) {
           throw new Error('Failed to fetch data from Google Sheets');
@@ -131,6 +134,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }));
       } catch (error) {
         console.error('Error fetching data from Google Sheets:', error);
+        setError(error instanceof Error ? error.message : 'Failed to fetch data from Google Sheets');
       }
     };
 
@@ -189,7 +193,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <DashboardContext.Provider value={{ dashboardData, updateMetric, updateChannelMetric, resetMetrics }}>
+    <DashboardContext.Provider value={{ dashboardData, updateMetric, updateChannelMetric, resetMetrics, error }}>
       {children}
     </DashboardContext.Provider>
   );
