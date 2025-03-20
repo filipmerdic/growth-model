@@ -87,10 +87,45 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
           ...prev,
           metrics: {
             ...prev.metrics,
-            MQLs: { ...prev.metrics.MQLs, current: data.MQLs.current, target: data.MQLs.target },
-            SQLs: { ...prev.metrics.SQLs, current: data.SQLs.current, target: data.SQLs.target },
-            SQOs: { ...prev.metrics.SQOs, current: data.SQOs.current, target: data.SQOs.target },
-            CWDs: { ...prev.metrics.CWDs, current: data.CWDs.current, target: data.CWDs.target },
+            MQLs: { ...prev.metrics.MQLs, current: data.metrics.MQLs.current, target: data.metrics.MQLs.target },
+            SQLs: { ...prev.metrics.SQLs, current: data.metrics.SQLs.current, target: data.metrics.SQLs.target },
+            SQOs: { ...prev.metrics.SQOs, current: data.metrics.SQOs.current, target: data.metrics.SQOs.target },
+            CWDs: { ...prev.metrics.CWDs, current: data.metrics.CWDs.current, target: data.metrics.CWDs.target },
+          },
+          channelMetrics: {
+            ...prev.channelMetrics,
+            MQLs: {
+              ...prev.channelMetrics.MQLs,
+              metrics: {
+                'Paid Channels': { ...prev.channelMetrics.MQLs.metrics['Paid Channels'], current: data.channelMetrics.MQLs['Paid Channels'].current, target: data.channelMetrics.MQLs['Paid Channels'].target },
+                'Referral Channels': { ...prev.channelMetrics.MQLs.metrics['Referral Channels'], current: data.channelMetrics.MQLs['Referral Channels'].current, target: data.channelMetrics.MQLs['Referral Channels'].target },
+                'Organic & Other': { ...prev.channelMetrics.MQLs.metrics['Organic & Other'], current: data.channelMetrics.MQLs['Organic & Other'].current, target: data.channelMetrics.MQLs['Organic & Other'].target },
+              },
+            },
+            SQLs: {
+              ...prev.channelMetrics.SQLs,
+              metrics: {
+                'Paid Channels': { ...prev.channelMetrics.SQLs.metrics['Paid Channels'], current: data.channelMetrics.SQLs['Paid Channels'].current, target: data.channelMetrics.SQLs['Paid Channels'].target },
+                'Referral Channels': { ...prev.channelMetrics.SQLs.metrics['Referral Channels'], current: data.channelMetrics.SQLs['Referral Channels'].current, target: data.channelMetrics.SQLs['Referral Channels'].target },
+                'Organic & Other': { ...prev.channelMetrics.SQLs.metrics['Organic & Other'], current: data.channelMetrics.SQLs['Organic & Other'].current, target: data.channelMetrics.SQLs['Organic & Other'].target },
+              },
+            },
+            SQOs: {
+              ...prev.channelMetrics.SQOs,
+              metrics: {
+                'Paid Channels': { ...prev.channelMetrics.SQOs.metrics['Paid Channels'], current: data.channelMetrics.SQOs['Paid Channels'].current, target: data.channelMetrics.SQOs['Paid Channels'].target },
+                'Referral Channels': { ...prev.channelMetrics.SQOs.metrics['Referral Channels'], current: data.channelMetrics.SQOs['Referral Channels'].current, target: data.channelMetrics.SQOs['Referral Channels'].target },
+                'Organic & Other': { ...prev.channelMetrics.SQOs.metrics['Organic & Other'], current: data.channelMetrics.SQOs['Organic & Other'].current, target: data.channelMetrics.SQOs['Organic & Other'].target },
+              },
+            },
+            CWDs: {
+              ...prev.channelMetrics.CWDs,
+              metrics: {
+                'Paid Channels': { ...prev.channelMetrics.CWDs.metrics['Paid Channels'], current: data.channelMetrics.CWDs['Paid Channels'].current, target: data.channelMetrics.CWDs['Paid Channels'].target },
+                'Referral Channels': { ...prev.channelMetrics.CWDs.metrics['Referral Channels'], current: data.channelMetrics.CWDs['Referral Channels'].current, target: data.channelMetrics.CWDs['Referral Channels'].target },
+                'Organic & Other': { ...prev.channelMetrics.CWDs.metrics['Organic & Other'], current: data.channelMetrics.CWDs['Organic & Other'].current, target: data.channelMetrics.CWDs['Organic & Other'].target },
+              },
+            },
           },
           lastUpdated: new Date().toISOString(),
         }));

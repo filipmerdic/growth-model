@@ -86,18 +86,53 @@ export async function GET() {
       CWDs: { current: 0, target: 0 },
     };
 
-    // Assuming the sheet has columns: Metric, Current, Target
+    const channelMetrics = {
+      MQLs: {
+        'Paid Channels': { current: 0, target: 0 },
+        'Referral Channels': { current: 0, target: 0 },
+        'Organic & Other': { current: 0, target: 0 },
+      },
+      SQLs: {
+        'Paid Channels': { current: 0, target: 0 },
+        'Referral Channels': { current: 0, target: 0 },
+        'Organic & Other': { current: 0, target: 0 },
+      },
+      SQOs: {
+        'Paid Channels': { current: 0, target: 0 },
+        'Referral Channels': { current: 0, target: 0 },
+        'Organic & Other': { current: 0, target: 0 },
+      },
+      CWDs: {
+        'Paid Channels': { current: 0, target: 0 },
+        'Referral Channels': { current: 0, target: 0 },
+        'Organic & Other': { current: 0, target: 0 },
+      },
+    };
+
+    // Process the rows
     rows.forEach((row) => {
       const [metric, current, target] = row;
+      
+      // Process main metrics
       if (metrics[metric as keyof typeof metrics]) {
         metrics[metric as keyof typeof metrics] = {
           current: parseInt(current) || 0,
           target: parseInt(target) || 0,
         };
       }
+      
+      // Process channel metrics
+      const [parentMetric, channel] = metric.split(' - ');
+      if (channelMetrics[parentMetric as keyof typeof channelMetrics] && 
+          channelMetrics[parentMetric as keyof typeof channelMetrics][channel as keyof typeof channelMetrics.MQLs]) {
+        channelMetrics[parentMetric as keyof typeof channelMetrics][channel as keyof typeof channelMetrics.MQLs] = {
+          current: parseInt(current) || 0,
+          target: parseInt(target) || 0,
+        };
+      }
     });
 
-    return NextResponse.json(metrics, {
+    return NextResponse.json({ metrics, channelMetrics }, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
