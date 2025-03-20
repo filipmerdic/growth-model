@@ -36,7 +36,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metricKey, metric }) => {
     } else {
       setProgressColor('#10b981'); // Green
     }
-  }, [metric.current, metric.target]);
+  }, [metric]);
 
   const handleSave = () => {
     const newCurrent = parseInt(currentValue) || 0;
