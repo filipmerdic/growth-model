@@ -1,26 +1,44 @@
-import { google } from 'googleapis/build/src/index';
+import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
-
-// Initialize the Google Sheets API
-const auth = new google.auth.GoogleAuth({
-  credentials: {
-    client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    project_id: process.env.GOOGLE_SHEETS_PROJECT_ID,
-  },
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
-
-const sheets = google.sheets({ version: 'v4', auth });
 
 export async function GET() {
   try {
-    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
-    const range = process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A2:D'; // Adjust range as needed
+    // Log environment variables (excluding sensitive data)
+    console.log('Checking environment variables:');
+    console.log('CLIENT_EMAIL exists:', !!process.env.GOOGLE_SHEETS_CLIENT_EMAIL);
+    console.log('PRIVATE_KEY exists:', !!process.env.GOOGLE_SHEETS_PRIVATE_KEY);
+    console.log('PROJECT_ID exists:', !!process.env.GOOGLE_SHEETS_PROJECT_ID);
+    console.log('SPREADSHEET_ID exists:', !!process.env.GOOGLE_SHEETS_SPREADSHEET_ID);
+    console.log('RANGE exists:', !!process.env.GOOGLE_SHEETS_RANGE);
+
+    if (!process.env.GOOGLE_SHEETS_CLIENT_EMAIL) {
+      throw new Error('GOOGLE_SHEETS_CLIENT_EMAIL is not defined');
+    }
+    if (!process.env.GOOGLE_SHEETS_PRIVATE_KEY) {
+      throw new Error('GOOGLE_SHEETS_PRIVATE_KEY is not defined');
+    }
+    if (!process.env.GOOGLE_SHEETS_PROJECT_ID) {
+      throw new Error('GOOGLE_SHEETS_PROJECT_ID is not defined');
+    }
+    if (!process.env.GOOGLE_SHEETS_SPREADSHEET_ID) {
+      throw new Error('GOOGLE_SHEETS_SPREADSHEET_ID is not defined');
+    }
+
+    // Initialize the Google Sheets API
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        project_id: process.env.GOOGLE_SHEETS_PROJECT_ID,
+      },
+      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+    });
+
+    const sheets = google.sheets({ version: 'v4', auth });
 
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range,
+      spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID,
+      range: process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A2:D',
     });
 
     const rows = response.data.values;
@@ -49,9 +67,9 @@ export async function GET() {
 
     return NextResponse.json(metrics);
   } catch (error) {
-    console.error('Error fetching Google Sheets data:', error);
+    console.error('Error in Google Sheets API:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch data from Google Sheets' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch data from Google Sheets' },
       { status: 500 }
     );
   }
