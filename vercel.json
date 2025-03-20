@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "GOOGLE_SHEETS_CLIENT_EMAIL": "@google_sheets_client_email",
+    "GOOGLE_SHEETS_PRIVATE_KEY": "@google_sheets_private_key",
+    "GOOGLE_SHEETS_PROJECT_ID": "@google_sheets_project_id",
+    "GOOGLE_SHEETS_SPREADSHEET_ID": "@google_sheets_spreadsheet_id",
+    "GOOGLE_SHEETS_RANGE": "@google_sheets_range"
+  }
+} 
